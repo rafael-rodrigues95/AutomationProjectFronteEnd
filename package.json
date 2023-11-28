@@ -12,11 +12,11 @@
     "react": "^18.2.0",
     "react-bootstrap": "^2.9.1",
     "react-dom": "^18.2.0",
+    "react-router": "^6.20.0",
     "react-scripts": "5.0.1",
     "timers": "^0.1.1",
     "web-vitals": "^2.1.4",
-    "xml2js": "^0.6.2",
-    "proxy": "http://localhost:8080"
+    "xml2js": "^0.6.2"
   },
   "scripts": {
     "start": "react-scripts start",
