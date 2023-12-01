@@ -4,15 +4,14 @@ import { Button, ButtonGroup, Container, Table } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import RoboService from "../services/RoboService";
 
-
 class RoboList extends Component {
   constructor(props) {
     super(props);
     this.state = { robos: [] };
     this.addRobo = this.addRobo.bind(this);
+    this.editarRobo = this.editarRobo.bind(this);
+    this.deletarRobo = this.deletarRobo.bind(this);
   }
-
-
 
   componentDidMount() {
     RoboService.getRobos().then((response) =>
@@ -20,9 +19,21 @@ class RoboList extends Component {
     );
   }
 
-  addRobo(){
-    this.props.history.push('/criar')
-    document.location.reload()
+  addRobo() {
+    this.props.history.push("/criar");
+    document.location.reload();
+  }
+
+  deletarRobo(id) {
+    RoboService.deletarRobo(id).then(( res => {
+      this.setState({robos: this.state.robos.filter(robo => robo.id !== id)});
+    }))
+    document.location.reload();
+  }
+
+  editarRobo(id){
+    this.props.history.push(`/editar/${id}`)
+    document.location.reload();
   }
 
   render() {
@@ -37,16 +48,22 @@ class RoboList extends Component {
         <tr>
           <td>{robo.id}</td>
           <td style={{ whiteSpace: "nowrap" }}>{robo.nome}</td>
-          <td>{robo.dtExecutar}</td>
           <td>{robo.descricao}</td>
           <td>{robo.ativo}</td>
+          <td>{robo.dtExecutar}</td>
           <td>
             <ButtonGroup>
-              {/* <Button size="sm" color="primary" tag={Link} to={"/robos/" + robo.id}>Editar</Button> */}
               <Button
                 size="sm"
-                color="danger"
-                onClick={() => this.remove(robo.id)}
+                color="primary"
+                onClick={() => this.editarRobo(robo.id)}
+              >
+                Editar
+              </Button>
+              <Button
+                size="sm"
+                variant="danger"
+                onClick={() => this.deletarRobo(robo.id)}
               >
                 Deletar
               </Button>
@@ -63,6 +80,7 @@ class RoboList extends Component {
             {/* <Button color="success" tag={Link} to="/robos/new">Add robo</Button> */}
           </div>
           <h3>Lista dos Robôs</h3>
+          <p>&nbsp;</p>
           <button className="btn btn-primary" onClick={this.addRobo}>
             Adicionar Robô
           </button>
@@ -70,8 +88,8 @@ class RoboList extends Component {
             <thead>
               <tr>
                 <th width="16%">Id</th>
-                <th width="16%">Descrição</th>
                 <th width="16%">Nome</th>
+                <th width="16%">Descrição</th>
                 <th width="16%">Ativo</th>
                 <th width="16%">Data Execução</th>
                 <th width="20%">Actions</th>

@@ -31,7 +31,7 @@ export default class RoboCriar extends Component {
     }
 
     alterarId = (event) => {
-      this.setState({idRobo: event.target.value});
+      this.setState({id: event.target.value});
     }
     alterarNome = (event) => {
       this.setState({nome: event.target.value});
@@ -66,24 +66,29 @@ export default class RoboCriar extends Component {
                             value={this.state.id} onChange={this.alterarId}/>
                     </div>
                     <div className='form-group'>
+                    <p>&nbsp;</p>
                         <label>Nome: </label>
                         <input placeholder='Nome' name='nome' className='form-control'
                             value={this.state.nome} onChange={this.alterarNome}/>
                     </div>
                     <div className='form-group'>
+                    <p>&nbsp;</p>
                         <label>Data da Execução: </label>
                         <input placeholder='Data da Execução' name='data-da-Execucao' className='form-control'
                             value={this.state.dtExecutar} onChange={this.alterarData}/>
                     </div>
                     <div className='form-group'>
+                    <p>&nbsp;</p>
                         <label>Descrição: </label>
                         <input placeholder='Descrição' name='descricao' className='form-control'
                             value={this.state.descricao} onChange={this.alterarDescricao}/>
                     </div>
                     <div className='form-group'>
+                    <p>&nbsp;</p>
                         <label>Ativo: </label>
                         <input placeholder='Está ativo' name='ativo' className='form-control'
                             value={this.state.ativo} onChange={this.alterarAtivo}/>
+                            <p>&nbsp;</p>
                     </div>
                     <button className='btn btn-success' onClick={this.salvarRobo}>Salvar</button>
                     <button className='btn btn-danger' onClick={this.cancelar.bind(this)} style={{marginLeft: "10px"}}>Cancelar</button>
