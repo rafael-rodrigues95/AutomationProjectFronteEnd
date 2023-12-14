@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import RoboService from "../services/RoboService";
-import DialogToast from "./DialogTost";
+import DialogToast from "./DialogToast";
 export default class RoboCriar extends Component {
   constructor(props) {
     super(props);
