@@ -1,5 +1,8 @@
 import React, { Component } from "react";
 import RoboService from "../services/RoboService";
+import { Button, ButtonGroup, Container, Toast, Modal } from "react-bootstrap";
+
+
 
 export default class RoboEditar extends Component {
   constructor(props) {
@@ -11,6 +14,7 @@ export default class RoboEditar extends Component {
       dtExecutar: "",
       descricao: "",
       ativo: "",
+      nomeRobo: "",
     };
     this.alterarId = this.alterarId.bind(this);
     this.alterarNome = this.alterarNome.bind(this);
@@ -29,6 +33,7 @@ export default class RoboEditar extends Component {
         dtExecutar: robo.dtExecutar,
         descricao: robo.descricao,
         ativo: robo.ativo,
+        isInputEnabled: false,
       });
     });
   }
@@ -46,7 +51,13 @@ export default class RoboEditar extends Component {
     RoboService.editarRobo(robos, this.state.id).then( res => {
         this.props.history.push('/robo');
     })
-  };
+  }
+
+  toggleInputEnabled = () => {
+    this.setState((prevState) => ({
+      isInputEnabled: !prevState.isInputEnabled,
+    }))
+  }
 
   alterarId = (event) => {
     this.setState({ id: event.target.value });
@@ -63,6 +74,8 @@ export default class RoboEditar extends Component {
   alterarAtivo = (event) => {
     this.setState({ ativo: event.target.value });
   };
+
+
 
   cancelar() {
     this.props.history.push("/");
@@ -85,6 +98,7 @@ export default class RoboEditar extends Component {
                     className="form-control"
                     value={this.state.id}
                     onChange={this.alterarId}
+                    disabled={!this.state.isInputEnabled} 
                   />
                 </div>
                 <div className="form-group">
@@ -146,6 +160,7 @@ export default class RoboEditar extends Component {
             </div>
           </div>
         </div>
+
       </div>
     );
   }

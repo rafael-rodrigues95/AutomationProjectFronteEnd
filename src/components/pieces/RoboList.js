@@ -1,10 +1,9 @@
 import React, { Component } from "react";
 import { Button, ButtonGroup, Container, Table, Modal } from "react-bootstrap";
 // import { Link } from 'react-router-dom';
-import { useNavigate } from "react-router-dom";
 import RoboService from "../services/RoboService";
 
-function MyVerticallyCenteredModal({ showModal, handleClose, modalData, deleteRobo }) {
+function ModalConfirmacao({ showModal, handleClose, modalData, deleteRobo }) {
   return (
     <Modal
       show={showModal}
@@ -23,9 +22,8 @@ function MyVerticallyCenteredModal({ showModal, handleClose, modalData, deleteRo
         <p>Esta ação não poderá ser desfeita.</p>
       </Modal.Body>
       <Modal.Footer>
-        <Button onClick={handleClose}>Close</Button>
+        <Button onClick={handleClose}>Cancelar</Button>
         <Button
-          size="sm"
           variant="danger"
           onClick={deleteRobo}
         >
@@ -73,7 +71,7 @@ class RoboList extends Component {
       });
     });
     console.log("Robô id ", this.state.inputId, " deletado.");
-    //document.location.reload();
+    document.location.reload();
   }
 
   closeModalHandle = () => {
@@ -159,11 +157,12 @@ class RoboList extends Component {
             <tbody>{roboList}</tbody>
           </Table>
         </Container>
-        <MyVerticallyCenteredModal
+        <ModalConfirmacao
           showModal={this.state.modalShow}
           handleClose={this.closeModalHandle}
           modalData={this.state.inputId}
           deleteRobo={this.deletarRobo}
+          tipoDialog={'danger'}
         />
       </div>
     );
