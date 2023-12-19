@@ -12,7 +12,9 @@ export default class RoboCriar extends Component {
       descricao: "",
       ativo: "",
       robos: [],
-      isShowingToast: false,
+      isShowingErrorToast: false,
+      isShowingInfoToast: false,
+      isShowingEmptyErrorToast: false,
       nomeRobo: "",
     };
     this.alterarId = this.alterarId.bind(this);
@@ -21,48 +23,93 @@ export default class RoboCriar extends Component {
     this.alterarDescricao = this.alterarDescricao.bind(this);
     this.alterarAtivo = this.alterarAtivo.bind(this);
     this.salvarRobo = this.salvarRobo.bind(this);
-    this.openToastHandle = this.openToastHandle.bind(this);
-    this.closeToastHandle = this.closeToastHandle.bind(this);
+    this.openInfoToastHandle = this.openInfoToastHandle.bind(this);
+    this.closeInfoToastHandle = this.closeInfoToastHandle.bind(this);
+    this.openErrorToastHandle = this.openErrorToastHandle.bind(this);
+    this.closeErrorToastHandle = this.closeErrorToastHandle.bind(this);
+    this.openEmptyErrorToastHandle = this.openEmptyErrorToastHandle.bind(this);
+    this.closeEmptyErrorToastHandle =
+      this.closeEmptyErrorToastHandle.bind(this);
   }
 
   componentDidMount() {}
 
-  openToastHandle = (nome) => {
-    this.setState({ isShowingToast: !this.state.isShowingToast });
+  openErrorToastHandle = (nome) => {
+    this.setState({ isShowingErrorToast: !this.state.isShowingErrorToast });
     this.setState(
       {
         nome: nome,
       },
       () => {
-        console.log("Robô a ser editado: ", this.state.nome);
+        console.log("Tentando criar o robô: ", this.state.nome);
       }
     );
-  }
+  };
 
-  closeToastHandle = () => {
-    this.setState({ isShowingToast: !this.state.isShowingToast });
-  }
+  closeErrorToastHandle = () => {
+    this.setState({ isShowingErrorToast: !this.state.isShowingErrorToast });
+  };
+
+  openInfoToastHandle = (nome) => {
+    this.setState({ isShowingInfoToast: !this.state.isShowingInfoToast });
+    this.setState(
+      {
+        nome: nome,
+      },
+      () => {
+        console.log("Robô criado: ", this.state.nome);
+      }
+    );
+  };
+
+  closeInfoToastHandle = () => {
+    this.setState({ isShowingInfoToast: !this.state.isShowingInfoToast });
+  };
+
+  openEmptyErrorToastHandle = () => {
+    this.setState({
+      isShowingEmptyErrorToast: !this.state.isShowingEmptyErrorToast
+    });
+    // this.setState(() => {
+    //   console.log(
+    //     "Não foi possível criar o robô porque o campo nome está vazio."
+    //   );
+    // });
+  };
+
+  closeEmptyErrorToastHandle = () => {
+    this.setState({
+      isShowingEmptyErrorToast: !this.state.isShowingEmptyErrorToast
+    });
+  };
 
   salvarRobo = (e) => {
     e.preventDefault();
-    let robos = {
-      nome: this.state.nome,
-      dtExecutar: this.state.dtExecutar,
-      descricao: this.state.descricao,
-      ativo: this.state.ativo,
-    };
-    console.log("robo => " + JSON.stringify(robos));
+    if (this.state.nome === "") {
+      this.openEmptyErrorToastHandle();
+    } else {
+      let robos = {
+        nome: this.state.nome,
+        dtExecutar: this.state.dtExecutar,
+        descricao: this.state.descricao,
+        ativo: this.state.ativo,
+      };
+      console.log("robo => " + JSON.stringify(robos));
 
-    // Verifica se já existe robô com este mesmo nome
-    RoboService.getRoboByName(this.state.nome).then((response) =>
-      this.setState({ robos: response.data }, () => {
-        this.state.robos.nome === this.state.nome
-          ? (() => { this.openToastHandle(this.state.nome) })()
-          : RoboService.createRobo(robos).then((res) => {
-              this.props.history.push("/robos");
-            });
-      })
-    );
+      RoboService.getRoboByName(this.state.nome).then((response) =>
+        this.setState({ robos: response.data }, () => {
+          // Verifica se já existe robô com este mesmo nome
+          this.state.robos.nome === this.state.nome
+            ? (() => {
+                this.openErrorToastHandle(this.state.nome);
+              })()
+            : RoboService.createRobo(robos).then((res) => {
+                this.openInfoToastHandle(this.state.nome);
+              });
+        })
+      );
+      this.props.history.push("/");
+    }
   };
 
   alterarId = (event) => {
@@ -91,6 +138,7 @@ export default class RoboCriar extends Component {
         <p>&nbsp;</p>
         <div className="row">
           <div className="card col-md-6 offset-md-3 ">
+          <p>&nbsp;</p>
             <h3 className="text-center">Criar Robô</h3>
             <div className="card-body">
               <form>
@@ -138,6 +186,7 @@ export default class RoboCriar extends Component {
                     onChange={this.alterarAtivo}
                   />
                   <p>&nbsp;</p>
+                  <p>&nbsp;</p>
                 </div>
                 <button className="btn btn-success" onClick={this.salvarRobo}>
                   Salvar
@@ -154,10 +203,25 @@ export default class RoboCriar extends Component {
           </div>
         </div>
         <DialogToast
-          showToast={this.state.isShowingToast}
-          handleClose={this.closeToastHandle}
-          nomeRobo={this.state.nome}
-          tipoDialog={'danger'}
+          showToast={this.state.isShowingErrorToast}
+          handleClose={this.closeErrorToastHandle}
+          tipoDialog={"danger"}
+          toastTitle={"Erro"}
+          toastText={`Já existe um robô com o nome de "${this.state.nome}". Por favor escolha outro.`}
+        />
+        <DialogToast
+          showToast={this.state.isShowingInfoToast}
+          handleClose={this.closeInfoToastHandle}
+          tipoDialog={"success"}
+          toastTitle={"Info"}
+          toastText={`O Robô "${this.state.nome}" foi criado com êxito.`}
+        />
+        <DialogToast
+          showToast={this.state.isShowingEmptyErrorToast}
+          handleClose={this.closeEmptyErrorToastHandle}
+          tipoDialog={"danger"}
+          toastTitle={"Erro"}
+          toastText={`Você deve definir um nome para o Robô.`}
         />
       </div>
     );

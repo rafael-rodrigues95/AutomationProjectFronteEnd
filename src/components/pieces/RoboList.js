@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Button, ButtonGroup, Container, Table, Modal } from "react-bootstrap";
-// import { Link } from 'react-router-dom';
+import DialogToast from "./DialogToast";
 import RoboService from "../services/RoboService";
 
 function ModalConfirmacao({ showModal, handleClose, modalData, deleteRobo }) {
@@ -42,16 +42,37 @@ class RoboList extends Component {
       modalShow: false,
       inputId: "",
       modalData: "",
+      isShowingToast: false,
+      nomeRobo: "",
+      nome: "",
     };
     this.addRobo = this.addRobo.bind(this);
     this.editarRobo = this.editarRobo.bind(this);
     this.deletarRobo = this.deletarRobo.bind(this);
+    this.openToastHandle = this.openToastHandle.bind(this);
+    this.closeToastHandle = this.closeToastHandle.bind(this);
   }
 
   componentDidMount() {
     RoboService.getRobos().then((response) =>
       this.setState({ robos: response.data })
     );
+  }
+
+  openToastHandle = (nome) => {
+    this.setState({ isShowingToast: !this.state.isShowingToast });
+    this.setState(
+      {
+        nomeRobo: nome,
+      },
+      () => {
+        console.log("Robô deletado: ", this.state.nome);
+      }
+    );
+  }
+
+  closeToastHandle = () => {
+    this.setState({ isShowingToast: !this.state.isShowingToast });
   }
 
   addRobo() {
@@ -71,18 +92,22 @@ class RoboList extends Component {
       });
     });
     console.log("Robô id ", this.state.inputId, " deletado.");
-    document.location.reload();
+    this.openToastHandle(this.state.nomeRobo);
+    this.closeModalHandle();
+    this.props.history.push("/");
+
   }
 
   closeModalHandle = () => {
     this.setState({ modalShow: !this.state.modalShow });
   };
 
-  openModalHandle = (id) => {
+  openModalHandle = (id, nome) => {
     this.setState({ modalShow: !this.state.modalShow });
     this.setState(
       {
         inputId: id,
+        nomeRobo: nome
       },
       () => {
         console.log("Robô a ser deletado: id ", this.state.inputId);
@@ -122,7 +147,7 @@ class RoboList extends Component {
               <Button
                 size="sm"
                 variant="danger"
-                onClick={() => this.openModalHandle(robo.id)}
+                onClick={() => this.openModalHandle(robo.id, robo.nome)}
               >
                 Deletar
               </Button>
@@ -162,7 +187,14 @@ class RoboList extends Component {
           handleClose={this.closeModalHandle}
           modalData={this.state.inputId}
           deleteRobo={this.deletarRobo}
-          tipoDialog={'danger'}
+        />
+        <DialogToast
+          showToast={this.state.isShowingToast}
+          handleClose={this.closeToastHandle}
+          nomeRobo={this.state.nomeRobo}
+          tipoDialog={'light'}
+          toastTitle={'Info'}
+          toastText={`O robô "${this.state.nomeRobo}" foi deletado com êxito.`}
         />
       </div>
     );

@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import RoboService from "../services/RoboService";
 import { Button, ButtonGroup, Container, Toast, Modal } from "react-bootstrap";
+import ToggleAtivo from "./ToggleAtivo";
 
 
 
@@ -137,13 +138,14 @@ export default class RoboEditar extends Component {
                 <div className="form-group">
                   <p>&nbsp;</p>
                   <label>Ativo: </label>
-                  <input
+                  {/* <input
                     placeholder="Está ativo"
                     name="ativo"
                     className="form-control"
                     value={this.state.ativo}
                     onChange={this.alterarAtivo}
-                  />
+                  /> */}
+                  <ToggleAtivo />
                   <p>&nbsp;</p>
                 </div>
                 <button className="btn btn-success" onClick={this.editarRobo}>
