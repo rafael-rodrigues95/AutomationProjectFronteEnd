@@ -1,9 +1,8 @@
 import React, { Component } from "react";
 import RoboService from "../services/RoboService";
 import { Button, ButtonGroup, Container, Toast, Modal } from "react-bootstrap";
-import ToggleAtivo from "./ToggleAtivo";
-
-
+import { ToggleSwitch } from 'react-dragswitch'
+import 'react-dragswitch/dist/index.css'
 
 export default class RoboEditar extends Component {
   constructor(props) {
@@ -16,13 +15,16 @@ export default class RoboEditar extends Component {
       descricao: "",
       ativo: "",
       nomeRobo: "",
+      checked: true,
+      isInputEnabled: false,
     };
     this.alterarId = this.alterarId.bind(this);
     this.alterarNome = this.alterarNome.bind(this);
     this.alterarData = this.alterarData.bind(this);
     this.alterarDescricao = this.alterarDescricao.bind(this);
-    this.alterarAtivo = this.alterarAtivo.bind(this);
+    //this.alterarAtivo = this.alterarAtivo.bind(this);
     this.editarRobo = this.editarRobo.bind(this);
+    this.toggleHandle = this.toggleHandle.bind(this);
   }
 
   componentDidMount() {
@@ -34,7 +36,7 @@ export default class RoboEditar extends Component {
         dtExecutar: robo.dtExecutar,
         descricao: robo.descricao,
         ativo: robo.ativo,
-        isInputEnabled: false,
+        checked: this.state.ativo === '1' ? true : false
       });
     });
   }
@@ -49,16 +51,16 @@ export default class RoboEditar extends Component {
       ativo: this.state.ativo,
     };
     console.log("robo => " + JSON.stringify(robos));
-    RoboService.editarRobo(robos, this.state.id).then( res => {
-        this.props.history.push('/robo');
-    })
-  }
+    RoboService.editarRobo(robos, this.state.id).then((res) => {
+      this.props.history.push("/robo");
+    });
+  };
 
   toggleInputEnabled = () => {
     this.setState((prevState) => ({
       isInputEnabled: !prevState.isInputEnabled,
-    }))
-  }
+    }));
+  };
 
   alterarId = (event) => {
     this.setState({ id: event.target.value });
@@ -72,9 +74,17 @@ export default class RoboEditar extends Component {
   alterarDescricao = (event) => {
     this.setState({ descricao: event.target.value });
   };
-  alterarAtivo = (event) => {
-    this.setState({ ativo: event.target.value });
-  };
+  // alterarAtivo = () => {
+  //    this.setState({  ativo: this.state.ativo === '1' ? '0' : '1'});
+  // };
+
+  toggleHandle = (c) => {
+    this.setState({ checked: c }, () => console.log('toggle state changed'));
+    this.setState({
+        ativo: !this.state.checked ? "1" : "0",
+    }, () => { console.log('Clicked! Activated: ', this.state.ativo) }
+    );
+  }
 
 
 
@@ -99,7 +109,7 @@ export default class RoboEditar extends Component {
                     className="form-control"
                     value={this.state.id}
                     onChange={this.alterarId}
-                    disabled={!this.state.isInputEnabled} 
+                    disabled={!this.state.isInputEnabled}
                   />
                 </div>
                 <div className="form-group">
@@ -137,15 +147,17 @@ export default class RoboEditar extends Component {
                 </div>
                 <div className="form-group">
                   <p>&nbsp;</p>
-                  <label>Ativo: </label>
-                  {/* <input
-                    placeholder="Está ativo"
-                    name="ativo"
-                    className="form-control"
-                    value={this.state.ativo}
-                    onChange={this.alterarAtivo}
-                  /> */}
-                  <ToggleAtivo />
+                  <label>
+                    
+                  <div><ToggleSwitch
+                      checked={this.state.checked}
+                      offColor="rgb(200,0,0)"
+                      onChange={this.toggleHandle}
+                    />
+                    &nbsp;
+                    {this.state.checked ? 'Ativo' : 'Inativo'}</div>
+                  
+                  </label>
                   <p>&nbsp;</p>
                 </div>
                 <button className="btn btn-success" onClick={this.editarRobo}>
@@ -162,7 +174,6 @@ export default class RoboEditar extends Component {
             </div>
           </div>
         </div>
-
       </div>
     );
   }

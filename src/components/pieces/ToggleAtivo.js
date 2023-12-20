@@ -7,7 +7,7 @@ export default class ToggleAtivo extends Component {
     super(props);
 
     this.state = {
-      checked: "",
+      checked: false,
     };
 
   }

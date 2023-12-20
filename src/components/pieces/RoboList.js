@@ -23,10 +23,7 @@ function ModalConfirmacao({ showModal, handleClose, modalData, deleteRobo }) {
       </Modal.Body>
       <Modal.Footer>
         <Button onClick={handleClose}>Cancelar</Button>
-        <Button
-          variant="danger"
-          onClick={deleteRobo}
-        >
+        <Button variant="danger" onClick={deleteRobo}>
           Deletar
         </Button>
       </Modal.Footer>
@@ -69,11 +66,11 @@ class RoboList extends Component {
         console.log("Robô deletado: ", this.state.nome);
       }
     );
-  }
+  };
 
   closeToastHandle = () => {
     this.setState({ isShowingToast: !this.state.isShowingToast });
-  }
+  };
 
   addRobo() {
     this.props.history.push("/criar");
@@ -88,14 +85,15 @@ class RoboList extends Component {
   deletarRobo() {
     RoboService.deletarRobo(this.state.inputId).then((res) => {
       this.setState({
-        robos: this.state.robos.filter((robo) => robo.id !== this.state.inputId),
+        robos: this.state.robos.filter(
+          (robo) => robo.id !== this.state.inputId
+        ),
       });
     });
     console.log("Robô id ", this.state.inputId, " deletado.");
     this.openToastHandle(this.state.nomeRobo);
     this.closeModalHandle();
     this.props.history.push("/");
-
   }
 
   closeModalHandle = () => {
@@ -107,7 +105,7 @@ class RoboList extends Component {
     this.setState(
       {
         inputId: id,
-        nomeRobo: nome
+        nomeRobo: nome,
       },
       () => {
         console.log("Robô a ser deletado: id ", this.state.inputId);
@@ -125,10 +123,10 @@ class RoboList extends Component {
     const roboList = this.state.robos.map((robo) => {
       return (
         <tr>
+          <td>{robo.ativo}</td>
           <td>{robo.id}</td>
           <td style={{ whiteSpace: "nowrap" }}>{robo.nome}</td>
           <td>{robo.descricao}</td>
-          <td>{robo.ativo}</td>
           <td>{robo.dtExecutar}</td>
           <td>
             <ButtonGroup>
@@ -171,11 +169,11 @@ class RoboList extends Component {
           <Table className="mt-4">
             <thead>
               <tr>
-                <th width="16%">Id</th>
-                <th width="16%">Nome</th>
-                <th width="16%">Descrição</th>
-                <th width="16%">Ativo</th>
-                <th width="16%">Data Execução</th>
+                <th width="10%">Ativo</th>
+                <th width="10%">Id</th>
+                <th width="20%">Nome</th>
+                <th width="20%">Descrição</th>
+                <th width="20%">Data Execução</th>
                 <th width="20%">Actions</th>
               </tr>
             </thead>
@@ -192,8 +190,8 @@ class RoboList extends Component {
           showToast={this.state.isShowingToast}
           handleClose={this.closeToastHandle}
           nomeRobo={this.state.nomeRobo}
-          tipoDialog={'light'}
-          toastTitle={'Info'}
+          tipoDialog={"light"}
+          toastTitle={"Info"}
           toastText={`O robô "${this.state.nomeRobo}" foi deletado com êxito.`}
         />
       </div>
