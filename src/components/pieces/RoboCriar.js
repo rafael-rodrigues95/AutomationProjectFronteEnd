@@ -1,6 +1,8 @@
 import React, { Component } from "react";
+import { Container } from "react-bootstrap";
 import RoboService from "../services/RoboService";
 import DialogToast from "./DialogToast";
+import { ToggleSwitch } from "react-dragswitch";
 export default class RoboCriar extends Component {
   constructor(props) {
     super(props);
@@ -16,12 +18,12 @@ export default class RoboCriar extends Component {
       isShowingInfoToast: false,
       isShowingEmptyErrorToast: false,
       nomeRobo: "",
+      checked: true,
     };
     this.alterarId = this.alterarId.bind(this);
     this.alterarNome = this.alterarNome.bind(this);
     this.alterarData = this.alterarData.bind(this);
     this.alterarDescricao = this.alterarDescricao.bind(this);
-    this.alterarAtivo = this.alterarAtivo.bind(this);
     this.salvarRobo = this.salvarRobo.bind(this);
     this.openInfoToastHandle = this.openInfoToastHandle.bind(this);
     this.closeInfoToastHandle = this.closeInfoToastHandle.bind(this);
@@ -30,6 +32,7 @@ export default class RoboCriar extends Component {
     this.openEmptyErrorToastHandle = this.openEmptyErrorToastHandle.bind(this);
     this.closeEmptyErrorToastHandle =
       this.closeEmptyErrorToastHandle.bind(this);
+    this.toggleHandle = this.toggleHandle.bind(this);
   }
 
   componentDidMount() {}
@@ -68,7 +71,7 @@ export default class RoboCriar extends Component {
 
   openEmptyErrorToastHandle = () => {
     this.setState({
-      isShowingEmptyErrorToast: !this.state.isShowingEmptyErrorToast
+      isShowingEmptyErrorToast: !this.state.isShowingEmptyErrorToast,
     });
     // this.setState(() => {
     //   console.log(
@@ -79,7 +82,7 @@ export default class RoboCriar extends Component {
 
   closeEmptyErrorToastHandle = () => {
     this.setState({
-      isShowingEmptyErrorToast: !this.state.isShowingEmptyErrorToast
+      isShowingEmptyErrorToast: !this.state.isShowingEmptyErrorToast,
     });
   };
 
@@ -110,6 +113,7 @@ export default class RoboCriar extends Component {
       );
       this.props.history.push("/");
     }
+    this.clearForm();
   };
 
   alterarId = (event) => {
@@ -124,9 +128,34 @@ export default class RoboCriar extends Component {
   alterarDescricao = (event) => {
     this.setState({ descricao: event.target.value });
   };
-  alterarAtivo = (event) => {
-    this.setState({ ativo: event.target.value });
+  // alterarAtivo = (event) => {
+  //   this.setState({ ativo: event.target.value });
+  // };
+
+  toggleHandle = (c) => {
+    this.setState(
+      {
+        checked: c,
+      },
+      () => console.log("toggle state changed")
+    );
+    this.setState(
+      {
+        ativo: !this.state.checked ? "1" : "0",
+      },
+      () => {
+        console.log("Clicado! Ativado: ", this.state.ativo);
+      }
+    );
   };
+
+  clearForm() {
+    this.setState({
+      nome: "",
+      dtExecutar: "",
+      descricao: "",
+    });
+  }
 
   cancelar() {
     this.props.history.push("/");
@@ -134,95 +163,104 @@ export default class RoboCriar extends Component {
 
   render() {
     return (
-      <div className="container">
-        <p>&nbsp;</p>
-        <div className="row">
-          <div className="card col-md-6 offset-md-3 ">
+      <div>
+        <Container fluid>
+          <h3>Criar novo Robô</h3>
           <p>&nbsp;</p>
-            <h3 className="text-center">Criar Robô</h3>
-            <div className="card-body">
-              <form>
-                <div className="form-group">
-                  <p>&nbsp;</p>
-                  <label>Nome: </label>
-                  <input
-                    placeholder="Nome"
-                    name="nome"
-                    className="form-control"
-                    value={this.state.nome}
-                    onChange={this.alterarNome}
-                  />
-                </div>
-                <div className="form-group">
-                  <p>&nbsp;</p>
-                  <label>Data da Execução: </label>
-                  <input
-                    placeholder="Data da Execução"
-                    name="data-da-Execucao"
-                    className="form-control"
-                    value={this.state.dtExecutar}
-                    onChange={this.alterarData}
-                  />
-                </div>
-                <div className="form-group">
-                  <p>&nbsp;</p>
-                  <label>Descrição: </label>
-                  <input
-                    placeholder="Descrição"
-                    name="descricao"
-                    className="form-control"
-                    value={this.state.descricao}
-                    onChange={this.alterarDescricao}
-                  />
-                </div>
-                <div className="form-group">
-                  <p>&nbsp;</p>
-                  <label>Ativo: </label>
-                  <input
-                    placeholder="Está ativo"
-                    name="ativo"
-                    className="form-control"
-                    value={this.state.ativo}
-                    onChange={this.alterarAtivo}
-                  />
-                  <p>&nbsp;</p>
-                  <p>&nbsp;</p>
-                </div>
-                <button className="btn btn-success" onClick={this.salvarRobo}>
-                  Salvar
-                </button>
-                <button
-                  className="btn btn-danger"
-                  onClick={this.cancelar.bind(this)}
-                  style={{ marginLeft: "10px" }}
-                >
-                  Cancelar
-                </button>
-              </form>
+          <div className="row">
+            <div className="card col-md-6 offset-md-3 ">
+              <p>&nbsp;</p>
+              <h5 className="text-center">{this.state.nome === "" ? 'Nome do Robô' : this.state.nome}</h5>
+              <div className="card-body">
+                <form>
+                  <div className="form-group">
+                    <p>&nbsp;</p>
+                    <label>Nome: </label>
+                    <input
+                      placeholder="Nome"
+                      name="nome"
+                      className="form-control"
+                      value={this.state.nome}
+                      onChange={this.alterarNome}
+                    />
+                  </div>
+                  <div className="form-group">
+                    <p>&nbsp;</p>
+                    <label>Data da Execução: </label>
+                    <input
+                      placeholder="Data da Execução"
+                      name="data-da-Execucao"
+                      className="form-control"
+                      value={this.state.dtExecutar}
+                      onChange={this.alterarData}
+                    />
+                  </div>
+                  <div className="form-group">
+                    <p>&nbsp;</p>
+                    <label>Descrição: </label>
+                    <input
+                      placeholder="Descrição"
+                      name="descricao"
+                      className="form-control"
+                      value={this.state.descricao}
+                      onChange={this.alterarDescricao}
+                    />
+                  </div>
+                  <div className="form-group">
+                    <p>&nbsp;</p>
+                    <label>
+                      <div>
+                        <ToggleSwitch
+                          checked={this.state.checked}
+                          offColor="rgb(200,0,0)"
+                          onChange={this.toggleHandle}
+                        />
+                        &nbsp;
+                        {this.state.checked ? "Ativo" : "Inativo"}
+                      </div>
+                    </label>
+
+                    <p>&nbsp;</p>
+                  </div>
+                  <button className="btn btn-success" onClick={this.salvarRobo}>
+                    Salvar
+                  </button>
+                  <button
+                    className="btn btn-danger"
+                    onClick={this.cancelar.bind(this)}
+                    style={{ marginLeft: "10px" }}
+                  >
+                    Cancelar
+                  </button>
+                </form>
+              </div>
             </div>
           </div>
-        </div>
-        <DialogToast
-          showToast={this.state.isShowingErrorToast}
-          handleClose={this.closeErrorToastHandle}
-          tipoDialog={"danger"}
-          toastTitle={"Erro"}
-          toastText={`Já existe um robô com o nome de "${this.state.nome}". Por favor escolha outro.`}
-        />
-        <DialogToast
-          showToast={this.state.isShowingInfoToast}
-          handleClose={this.closeInfoToastHandle}
-          tipoDialog={"success"}
-          toastTitle={"Info"}
-          toastText={`O Robô "${this.state.nome}" foi criado com êxito.`}
-        />
-        <DialogToast
-          showToast={this.state.isShowingEmptyErrorToast}
-          handleClose={this.closeEmptyErrorToastHandle}
-          tipoDialog={"danger"}
-          toastTitle={"Erro"}
-          toastText={`Você deve definir um nome para o Robô.`}
-        />
+
+          <DialogToast
+            showToast={this.state.isShowingErrorToast}
+            handleClose={this.closeErrorToastHandle}
+            tipoDialog={"danger"}
+            toastTitle={"Erro"}
+            toastText={`Já existe um robô com o nome de "${this.state.nome}". Por favor escolha outro.`}
+          />
+
+          <DialogToast
+            showToast={this.state.isShowingInfoToast}
+            handleClose={this.closeInfoToastHandle}
+            tipoDialog={"success"}
+            toastTitle={"Info"}
+            toastText={`O Robô "${this.state.nome}" foi criado com êxito.`}
+          />
+
+          <DialogToast
+            showToast={this.state.isShowingEmptyErrorToast}
+            handleClose={this.closeEmptyErrorToastHandle}
+            tipoDialog={"danger"}
+            toastTitle={"Erro"}
+            toastText={`Você deve definir um nome para o Robô.`}
+          />
+        </Container>
       </div>
     );
   }

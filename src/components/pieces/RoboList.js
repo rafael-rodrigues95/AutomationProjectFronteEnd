@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { Button, ButtonGroup, Container, Table, Modal } from "react-bootstrap";
 import DialogToast from "./DialogToast";
 import RoboService from "../services/RoboService";
+import { ToggleSwitch } from "react-dragswitch";
 
 function ModalConfirmacao({ showModal, handleClose, modalData, deleteRobo }) {
   return (
@@ -42,17 +43,21 @@ class RoboList extends Component {
       isShowingToast: false,
       nomeRobo: "",
       nome: "",
+      checked: true,
     };
     this.addRobo = this.addRobo.bind(this);
     this.editarRobo = this.editarRobo.bind(this);
     this.deletarRobo = this.deletarRobo.bind(this);
     this.openToastHandle = this.openToastHandle.bind(this);
     this.closeToastHandle = this.closeToastHandle.bind(this);
+    this.handleToggle = this.handleToggle.bind(this);
   }
 
   componentDidMount() {
     RoboService.getRobos().then((response) =>
-      this.setState({ robos: response.data })
+      this.setState({
+        robos: response.data,
+      })
     );
   }
 
@@ -113,6 +118,30 @@ class RoboList extends Component {
     );
   };
 
+  handleToggle = (id) => {
+    this.setState((prevState) => {
+      const newArray = prevState.robos.map((robo) => {
+        if (robo.id === id) {
+          const roboClicado = {
+            ...robo,
+            ativo: robo.ativo === "1" ? "0" : "1",
+          };
+          this.editarAtivo(roboClicado)
+          console.log("Alterar se está ativo ou inativo: " + JSON.stringify(roboClicado));
+          return roboClicado;
+        }
+        return robo;
+      });
+      return { robos: newArray };
+    });
+  };
+
+  editarAtivo = (robo) => {
+    RoboService.editarRobo(robo, this.state.id).then((res) => {
+      this.props.history.push("/robo");
+    });
+  };
+
   render() {
     //     const {robos, isLoading} = this.state;
 
@@ -123,7 +152,19 @@ class RoboList extends Component {
     const roboList = this.state.robos.map((robo) => {
       return (
         <tr>
-          <td>{robo.ativo}</td>
+          <td>
+            <label>
+              <div>
+                <ToggleSwitch
+                  checked={robo.ativo === "1" ? true : false}
+                  offColor="rgb(200,0,0)"
+                  onChange={() => this.handleToggle(robo.id)}
+                />
+                &nbsp;&nbsp;&nbsp;
+                <small>{robo.ativo === "1" ? "Ativo" : "Inativo"}</small>
+              </div>
+            </label>
+          </td>
           <td>{robo.id}</td>
           <td style={{ whiteSpace: "nowrap" }}>{robo.nome}</td>
           <td>{robo.descricao}</td>
@@ -158,9 +199,7 @@ class RoboList extends Component {
     return (
       <div>
         <Container fluid>
-          <div className="float-right">
-            {/* <Button color="success" tag={Link} to="/robos/new">Add robo</Button> */}
-          </div>
+
           <h3>Lista dos Robôs</h3>
           <p>&nbsp;</p>
           <button className="btn btn-primary" onClick={this.addRobo}>
@@ -169,7 +208,7 @@ class RoboList extends Component {
           <Table className="mt-4">
             <thead>
               <tr>
-                <th width="10%">Ativo</th>
+                <th width="15%">Ativo</th>
                 <th width="10%">Id</th>
                 <th width="20%">Nome</th>
                 <th width="20%">Descrição</th>
@@ -190,7 +229,7 @@ class RoboList extends Component {
           showToast={this.state.isShowingToast}
           handleClose={this.closeToastHandle}
           nomeRobo={this.state.nomeRobo}
-          tipoDialog={"light"}
+          tipoDialog={"success"}
           toastTitle={"Info"}
           toastText={`O robô "${this.state.nomeRobo}" foi deletado com êxito.`}
         />
