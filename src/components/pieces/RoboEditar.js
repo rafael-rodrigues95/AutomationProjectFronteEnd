@@ -44,6 +44,10 @@ export default class RoboEditar extends Component {
     });
   }
 
+  ////////////////////////////////////////////////////////////////////
+  //      Gerenciamento da abertura e fechamento dos Toasts        //
+  //////////////////////////////////////////////////////////////////
+
   openErrorToastHandle = (nome) => {
     this.setState({ isShowingErrorToast: !this.state.isShowingErrorToast });
     this.setState(
@@ -88,6 +92,10 @@ export default class RoboEditar extends Component {
     });
   };
 
+  ///////////////////////////////////////////////////////////////////
+  //      Function editarRobo()                                   //
+  /////////////////////////////////////////////////////////////////
+
   editarRobo = (e) => {
     e.preventDefault();
     if (this.state.nome === "") {
@@ -107,7 +115,8 @@ export default class RoboEditar extends Component {
           if (this.state.robos.nome === this.state.nome) {
             RoboService.getRoboById(this.state.id).then((response) =>
               this.setState({ robosId: response.data }, () => {
-                // Verifica se estou tentando editar o robô atual
+                // Se existe robô com o mesmo nome, verifica se estou
+                // tentando editar o mesmo robô que cliquei na tela anterior
                 if (this.state.robosId.nome === this.state.nome) {
                   console.log("robo => " + JSON.stringify(robos));
                   RoboService.editarRobo(robos, this.state.id).then((res) => {
@@ -129,11 +138,19 @@ export default class RoboEditar extends Component {
     }
   };
 
+  ////////////////////////////////////////////////////////////////////
+  //      Desabilitar Input Id                                     //
+  //////////////////////////////////////////////////////////////////
+
   toggleInputEnabled = () => {
     this.setState((prevState) => ({
       isInputEnabled: !prevState.isInputEnabled,
     }));
   };
+
+  ////////////////////////////////////////////////////////////////////
+  //      Edição dos Inputs do formulário                          //
+  //////////////////////////////////////////////////////////////////
 
   alterarId = (event) => {
     this.setState({ id: event.target.value });
@@ -147,9 +164,10 @@ export default class RoboEditar extends Component {
   alterarDescricao = (event) => {
     this.setState({ descricao: event.target.value });
   };
-  // alterarAtivo = () => {
-  //    this.setState({  ativo: this.state.ativo === '1' ? '0' : '1'});
-  // };
+
+  ////////////////////////////////////////////////////////////////////
+  //      Toggle Robô ativo ou inativo                             //
+  //////////////////////////////////////////////////////////////////
 
   toggleHandle = (c) => {
     this.setState(
@@ -168,9 +186,17 @@ export default class RoboEditar extends Component {
     );
   };
 
+  ////////////////////////////////////////////////////////////////////
+  //      Função para cancelar a edição                            //
+  //////////////////////////////////////////////////////////////////
+
   cancelar() {
     this.props.history.push("/");
   }
+
+  ////////////////////////////////////////////////////////////////////
+  //      Interface do usuário                                     //
+  //////////////////////////////////////////////////////////////////
 
   render() {
     return (

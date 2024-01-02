@@ -4,6 +4,10 @@ import DialogToast from "./DialogToast";
 import RoboService from "../services/RoboService";
 import { ToggleSwitch } from "react-dragswitch";
 
+////////////////////////////////////////////////////////////////////
+//      Modal component                                          //
+//////////////////////////////////////////////////////////////////
+
 function ModalConfirmacao({ showModal, handleClose, modalData, deleteRobo }) {
   return (
     <Modal
@@ -61,6 +65,10 @@ class RoboList extends Component {
     );
   }
 
+  ////////////////////////////////////////////////////////////////////
+  //      Gerenciamento da abertura e fechamento dos Toasts        //
+  //////////////////////////////////////////////////////////////////
+
   openToastHandle = (nome) => {
     this.setState({ isShowingToast: !this.state.isShowingToast });
     this.setState(
@@ -77,15 +85,27 @@ class RoboList extends Component {
     this.setState({ isShowingToast: !this.state.isShowingToast });
   };
 
+  ////////////////////////////////////////////////////////////////////
+  //      Chama a página para criar o Robô                         //
+  //////////////////////////////////////////////////////////////////
+
   addRobo() {
     this.props.history.push("/criar");
     document.location.reload();
   }
 
+  ////////////////////////////////////////////////////////////////////
+  //      Chama a página para editar o Robô                        //
+  //////////////////////////////////////////////////////////////////
+
   editarRobo(id) {
     this.props.history.push(`/editar/${id}`);
     document.location.reload();
   }
+
+  ////////////////////////////////////////////////////////////////////
+  //      Função para deletar o Robô                               //
+  //////////////////////////////////////////////////////////////////
 
   deletarRobo() {
     RoboService.deletarRobo(this.state.inputId).then((res) => {
@@ -100,6 +120,10 @@ class RoboList extends Component {
     this.closeModalHandle();
     this.props.history.push("/");
   }
+
+  ////////////////////////////////////////////////////////////////////
+  //      Gerenciamento da abertura e fechamento dos Modais        //
+  //////////////////////////////////////////////////////////////////
 
   closeModalHandle = () => {
     this.setState({ modalShow: !this.state.modalShow });
@@ -118,6 +142,10 @@ class RoboList extends Component {
     );
   };
 
+  ////////////////////////////////////////////////////////////////////
+  //      Toggle Robô ativo ou inativo                             //
+  //////////////////////////////////////////////////////////////////
+
   handleToggle = (id) => {
     this.setState((prevState) => {
       const newArray = prevState.robos.map((robo) => {
@@ -126,8 +154,10 @@ class RoboList extends Component {
             ...robo,
             ativo: robo.ativo === "1" ? "0" : "1",
           };
-          this.editarAtivo(roboClicado)
-          console.log("Alterar se está ativo ou inativo: " + JSON.stringify(roboClicado));
+          this.editarAtivo(roboClicado);
+          console.log(
+            "Alterar se está ativo ou inativo: " + JSON.stringify(roboClicado)
+          );
           return roboClicado;
         }
         return robo;
@@ -136,19 +166,21 @@ class RoboList extends Component {
     });
   };
 
+  ////////////////////////////////////////////////////////////////////
+  //      Editar status ativo/inativo do robô                      //
+  //////////////////////////////////////////////////////////////////
+
   editarAtivo = (robo) => {
     RoboService.editarRobo(robo, this.state.id).then((res) => {
       this.props.history.push("/robo");
     });
   };
 
+  ////////////////////////////////////////////////////////////////////
+  //      Interface do usuário                                     //
+  //////////////////////////////////////////////////////////////////
+
   render() {
-    //     const {robos, isLoading} = this.state;
-
-    // if (isLoading) {
-    //     return <p>Loading...</p>;
-    // }
-
     const roboList = this.state.robos.map((robo) => {
       return (
         <tr>
@@ -178,11 +210,6 @@ class RoboList extends Component {
               >
                 Editar
               </Button>
-              {/* <Button
-                size="sm"
-                variant="danger"
-                onClick={() => this.deletarRobo(robo.id)}
-              > */}
               <Button
                 size="sm"
                 variant="danger"
@@ -199,7 +226,6 @@ class RoboList extends Component {
     return (
       <div>
         <Container fluid>
-
           <h3>Lista dos Robôs</h3>
           <p>&nbsp;</p>
           <button className="btn btn-primary" onClick={this.addRobo}>

@@ -37,6 +37,10 @@ export default class RoboCriar extends Component {
 
   componentDidMount() {}
 
+  ////////////////////////////////////////////////////////////////////
+  //      Gerenciamento da abertura e fechamento dos Toasts        //
+  //////////////////////////////////////////////////////////////////
+
   openErrorToastHandle = (nome) => {
     this.setState({ isShowingErrorToast: !this.state.isShowingErrorToast });
     this.setState(
@@ -73,11 +77,6 @@ export default class RoboCriar extends Component {
     this.setState({
       isShowingEmptyErrorToast: !this.state.isShowingEmptyErrorToast,
     });
-    // this.setState(() => {
-    //   console.log(
-    //     "Não foi possível criar o robô porque o campo nome está vazio."
-    //   );
-    // });
   };
 
   closeEmptyErrorToastHandle = () => {
@@ -85,6 +84,10 @@ export default class RoboCriar extends Component {
       isShowingEmptyErrorToast: !this.state.isShowingEmptyErrorToast,
     });
   };
+
+  ////////////////////////////////////////////////////////////////////
+  //      Função salvarRobo()                                      //
+  //////////////////////////////////////////////////////////////////
 
   salvarRobo = (e) => {
     e.preventDefault();
@@ -116,6 +119,10 @@ export default class RoboCriar extends Component {
     this.clearForm();
   };
 
+  ////////////////////////////////////////////////////////////////////
+  //      Edição dos Inputs do formulário                          //
+  //////////////////////////////////////////////////////////////////
+
   alterarId = (event) => {
     this.setState({ id: event.target.value });
   };
@@ -128,9 +135,10 @@ export default class RoboCriar extends Component {
   alterarDescricao = (event) => {
     this.setState({ descricao: event.target.value });
   };
-  // alterarAtivo = (event) => {
-  //   this.setState({ ativo: event.target.value });
-  // };
+
+  ////////////////////////////////////////////////////////////////////
+  //      Toggle Robô ativo ou inativo                             //
+  //////////////////////////////////////////////////////////////////
 
   toggleHandle = (c) => {
     this.setState(
@@ -149,6 +157,10 @@ export default class RoboCriar extends Component {
     );
   };
 
+  ////////////////////////////////////////////////////////////////////
+  //      Resetar Formulário                                       //
+  //////////////////////////////////////////////////////////////////
+
   clearForm() {
     this.setState({
       nome: "",
@@ -157,9 +169,17 @@ export default class RoboCriar extends Component {
     });
   }
 
+  ////////////////////////////////////////////////////////////////////
+  //      Cancelar criar Robô                                      //
+  //////////////////////////////////////////////////////////////////
+
   cancelar() {
     this.props.history.push("/");
   }
+
+  ////////////////////////////////////////////////////////////////////
+  //      Interface do usuário                                     //
+  //////////////////////////////////////////////////////////////////
 
   render() {
     return (
@@ -170,7 +190,9 @@ export default class RoboCriar extends Component {
           <div className="row">
             <div className="card col-md-6 offset-md-3 ">
               <p>&nbsp;</p>
-              <h5 className="text-center">{this.state.nome === "" ? 'Nome do Robô' : this.state.nome}</h5>
+              <h5 className="text-center">
+                {this.state.nome === "" ? "Nome do Robô" : this.state.nome}
+              </h5>
               <div className="card-body">
                 <form>
                   <div className="form-group">
