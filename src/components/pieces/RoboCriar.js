@@ -35,7 +35,12 @@ export default class RoboCriar extends Component {
     this.toggleHandle = this.toggleHandle.bind(this);
   }
 
-  componentDidMount() {}
+  componentDidMount() {
+    window.onpopstate = () => {
+      this.props.history.push("/");
+      document.location.reload();
+    };
+  }
 
   ////////////////////////////////////////////////////////////////////
   //      Gerenciamento da abertura e fechamento dos Toasts        //
@@ -185,6 +190,7 @@ export default class RoboCriar extends Component {
     return (
       <div>
         <Container fluid>
+        <p>&nbsp;</p>
           <h3>Criar novo Robô</h3>
           <p>&nbsp;</p>
           <div className="row">

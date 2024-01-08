@@ -22,4 +22,11 @@ module.exports = function (app) {
       changeOrigin: true,
     })
   );
+  app.use(
+    "/api",
+    createProxyMiddleware({
+      target: "http://192.168.0.180:8088",
+      changeOrigin: true,
+    })
+  );
 };

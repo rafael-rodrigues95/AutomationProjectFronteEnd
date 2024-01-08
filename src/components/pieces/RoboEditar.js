@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import RoboService from "../services/RoboService";
 import { Container } from "react-bootstrap";
 import { ToggleSwitch } from "react-dragswitch";
+import { useHistory } from "react-router-dom"
 import "react-dragswitch/dist/index.css";
 import DialogToast from "./DialogToast";
 
@@ -41,8 +42,14 @@ export default class RoboEditar extends Component {
         ativo: robo.ativo,
         checked: this.state.ativo === "1" ? true : false,
       });
+      window.onpopstate = () => {
+        this.props.history.push("/");
+        document.location.reload();
+      };
     });
   }
+
+
 
   ////////////////////////////////////////////////////////////////////
   //      Gerenciamento da abertura e fechamento dos Toasts        //
@@ -202,6 +209,7 @@ export default class RoboEditar extends Component {
     return (
       <div>
         <Container fluid>
+        <p>&nbsp;</p>
           <h3>Editar Robô</h3>
           <p>&nbsp;</p>
           <div className="row">

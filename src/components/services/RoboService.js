@@ -1,11 +1,14 @@
 
 import axios from  'axios'
 
-const ROBO_API_JAVA_GET = "http://localhost:8080/engine/robo/all"
-const ROBO_API_JAVA_POST = "http://localhost:8080/engine/robo"
-const ROBO_API_JAVA_GET_BY_ID = "http://localhost:8080/engine/robo/buscarporid"
-const ROBO_API_JAVA_GET_BY_NAME = "http://localhost:8080/engine/robo/buscarpornome"
-const ROBO_API_JAVA_DELETE = "http://localhost:8080/engine/robo"
+// const ENDPOINT = "http://localhost:8080"
+const ENDPOINT = "http://192.168.0.180:8088"
+
+const ROBO_API_JAVA_GET = ENDPOINT + "/engine/robo/all"
+const ROBO_API_JAVA_POST = ENDPOINT + "/engine/robo"
+const ROBO_API_JAVA_GET_BY_ID = ENDPOINT + "/engine/robo/buscarporid"
+const ROBO_API_JAVA_GET_BY_NAME = ENDPOINT + "/engine/robo/buscarpornome"
+const ROBO_API_JAVA_DELETE = ENDPOINT + "/engine/robo"
 
 class RoboService {
 

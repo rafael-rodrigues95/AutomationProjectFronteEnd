@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Navbar, Container, Nav, NavDropdown } from "react-bootstrap";
-import logo from '../resources/images/MGS-logo.jpg'
+import logo from '../resources/images/MGS-logo.png'
 
 class Header extends Component {
   goHome() {
