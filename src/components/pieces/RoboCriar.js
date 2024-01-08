@@ -12,7 +12,7 @@ export default class RoboCriar extends Component {
       nome: "",
       dtExecutar: "",
       descricao: "",
-      ativo: "",
+      ativo: 1,
       robos: [],
       isShowingErrorToast: false,
       isShowingInfoToast: false,
@@ -76,6 +76,7 @@ export default class RoboCriar extends Component {
 
   closeInfoToastHandle = () => {
     this.setState({ isShowingInfoToast: !this.state.isShowingInfoToast });
+    this.clearForm();
   };
 
   openEmptyErrorToastHandle = () => {
@@ -121,7 +122,6 @@ export default class RoboCriar extends Component {
       );
       this.props.history.push("/");
     }
-    this.clearForm();
   };
 
   ////////////////////////////////////////////////////////////////////
@@ -197,7 +197,7 @@ export default class RoboCriar extends Component {
             <div className="card col-md-6 offset-md-3 ">
               <p>&nbsp;</p>
               <h5 className="text-center">
-                {this.state.nome === "" ? "Nome do Robô" : this.state.nome}
+                {/* {this.state.nome === "" ? "Nome do Robô" : this.state.nome} */}
               </h5>
               <div className="card-body">
                 <form>
