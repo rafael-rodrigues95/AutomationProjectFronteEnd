@@ -17,6 +17,7 @@ class RoboService {
     }
 
     createRobo(robos){
+        console.log("robo serviço => " + JSON.stringify(robos));
             return axios.post(ROBO_API_JAVA_POST, robos)
     }
 

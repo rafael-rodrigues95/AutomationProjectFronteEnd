@@ -69,14 +69,14 @@ export default class RoboCriar extends Component {
         nome: nome,
       },
       () => {
-        console.log("Robô criado: ", this.state.nome);
+        console.log("Robô criado: ", nome);
       }
     );
   };
 
   closeInfoToastHandle = () => {
     this.setState({ isShowingInfoToast: !this.state.isShowingInfoToast });
-    this.clearForm();
+
   };
 
   openEmptyErrorToastHandle = () => {
@@ -120,7 +120,6 @@ export default class RoboCriar extends Component {
               });
         })
       );
-      this.props.history.push("/");
     }
   };
 
@@ -166,13 +165,13 @@ export default class RoboCriar extends Component {
   //      Resetar Formulário                                       //
   //////////////////////////////////////////////////////////////////
 
-  clearForm() {
-    this.setState({
-      nome: "",
-      dtExecutar: "",
-      descricao: "",
-    });
-  }
+  // clearForm() {
+  //   this.setState({
+  //     nome: "",
+  //     dtExecutar: "",
+  //     descricao: "",
+  //   });
+  // }
 
   ////////////////////////////////////////////////////////////////////
   //      Cancelar criar Robô                                      //

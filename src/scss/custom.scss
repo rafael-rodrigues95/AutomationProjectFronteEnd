@@ -1,11 +1,22 @@
-// @import "~bootstrap/scss/bootstrap.scss";
+// overwrite theme variables
+
+// $primary: red;
+// $danger: blue;
+$body-text-align:           null !default;
+$body-color:                #343a40 !default;
+$body-bg:                   #e9ecef !default;
+
+// $body-secondary-color:      rgba($body-color, .75) !default;
+// $body-secondary-bg:         $gray-200 !default;
+
+// $body-tertiary-color:       rgba($body-color, .5) !default;
+// $body-tertiary-bg:          $gray-100 !default;
+
+
+@import "~bootstrap/scss/bootstrap.scss";
 
 
 // Default variable overrides
 // $body-bg: #000;
 // $body-color: #111;
 
-// $theme-colors: (
-//   primary: red
-//   danger: blue
-// );
