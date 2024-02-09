@@ -1,8 +1,8 @@
 
 import axios from  'axios'
 
-// const ENDPOINT = "http://localhost:8080"
-const ENDPOINT = "http://192.168.0.180:8088"
+const ENDPOINT = "http://localhost:8080"
+// const ENDPOINT = "http://192.168.0.180:8088"
 
 const ROBO_API_JAVA_GET = ENDPOINT + "/engine/robo/all"
 const ROBO_API_JAVA_POST = ENDPOINT + "/engine/robo"

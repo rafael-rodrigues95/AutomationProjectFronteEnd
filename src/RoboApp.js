@@ -21,7 +21,9 @@ class RoboApp extends Component {
   render() {
     return (
       <div>
+
       <BasicLayout/>
+
       </div>
     );
   }

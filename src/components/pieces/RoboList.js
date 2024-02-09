@@ -1,11 +1,12 @@
-import React, { Component } from "react";
+import React, { Component, useEffect, useState } from "react";
 import { Button, ButtonGroup, Container, Table, Modal } from "react-bootstrap";
 import DialogToast from "./DialogToast";
 import RoboService from "../services/RoboService";
 import { ToggleSwitch } from "react-dragswitch";
+import { useHistory } from "react-router-dom";
 
-////////////////////////////////////////////////////////////////////
-//      Modal component                                          //
+
+//      Modal component
 //////////////////////////////////////////////////////////////////
 
 function ModalConfirmacao({ showModal, handleClose, modalData, deleteRobo }) {
@@ -36,233 +37,204 @@ function ModalConfirmacao({ showModal, handleClose, modalData, deleteRobo }) {
   );
 }
 
-class RoboList extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      robos: [],
-      modalShow: false,
-      inputId: "",
-      modalData: "",
-      isShowingToast: false,
-      nomeRobo: "",
-      nome: "",
-      checked: true,
-    };
-    this.addRobo = this.addRobo.bind(this);
-    this.editarRobo = this.editarRobo.bind(this);
-    this.deletarRobo = this.deletarRobo.bind(this);
-    this.openToastHandle = this.openToastHandle.bind(this);
-    this.closeToastHandle = this.closeToastHandle.bind(this);
-    this.handleToggle = this.handleToggle.bind(this);
-  }
 
-  componentDidMount() {
-    RoboService.getRobos().then((response) =>
-      this.setState({
-        robos: response.data,
-      })
-    );
-  }
+//      RoboList component
+//////////////////////////////////////////////////////////////////
 
-  ////////////////////////////////////////////////////////////////////
-  //      Gerenciamento da abertura e fechamento dos Toasts        //
-  //////////////////////////////////////////////////////////////////
+function RoboList() {
+  const [robos, setRobos] = useState([]);
+  const [modalShow, setModalShow] = useState(false);
+  const [inputId, setInputId] = useState([""]);
+  const [modalData, setModalData] = useState([""]);
+  const [isShowingToast, setIsShowingTost] = useState(false);
+  const [nomeRobo, setNomeRobo] = useState([""]);
+  const [nome, setNome] = useState([""]);
+  const [checked, setChecked] = useState(true);
+  const history = useHistory();
 
-  openToastHandle = (nome) => {
-    this.setState({ isShowingToast: !this.state.isShowingToast });
-    this.setState(
-      {
-        nomeRobo: nome,
-      },
-      () => {
-        console.log("Robô deletado: ", this.state.nome);
-      }
-    );
-  };
-
-  closeToastHandle = () => {
-    this.setState({ isShowingToast: !this.state.isShowingToast });
-  };
-
-  ////////////////////////////////////////////////////////////////////
-  //      Chama a página para criar o Robô                         //
-  //////////////////////////////////////////////////////////////////
-
-  addRobo() {
-    this.props.history.push("/criar");
-    document.location.reload();
-  }
-
-  ////////////////////////////////////////////////////////////////////
-  //      Chama a página para editar o Robô                        //
-  //////////////////////////////////////////////////////////////////
-
-  editarRobo(id) {
-    this.props.history.push(`/editar/${id}`);
-    document.location.reload();
-  }
-
-  ////////////////////////////////////////////////////////////////////
-  //      Função para deletar o Robô                               //
-  //////////////////////////////////////////////////////////////////
-
-  deletarRobo() {
-    RoboService.deletarRobo(this.state.inputId).then((res) => {
-      this.setState({
-        robos: this.state.robos.filter(
-          (robo) => robo.id !== this.state.inputId
-        ),
-      });
+  useEffect(() => {
+    RoboService.getRobos().then((response) => {
+      setRobos(response.data);
     });
-    console.log("Robô id ", this.state.inputId, " deletado.");
-    this.openToastHandle(this.state.nomeRobo);
-    this.closeModalHandle();
-    this.props.history.push("/");
+  }, []);
+
+
+  //      Chama a página para criar o Robô
+  //////////////////////////////////////////////////////////////////
+
+  const addRobo = () => {
+    history.push("/criar");
+    document.location.reload();
+  };
+
+
+  //      Chama a página para editar o Robô
+  //////////////////////////////////////////////////////////////////
+
+  const roboEdit = (id) => {
+    history.push(`/editar/${id}`);
+    document.location.reload();
+  };
+
+
+  //      Função para deletar o Robô
+  //////////////////////////////////////////////////////////////////
+
+  async function deletarRobo(inputId) {
+    try {
+      await RoboService.deletarRobo(inputId);
+      setRobos(robos.filter((robo) => robo.id !== inputId));
+      console.log("Robô id", inputId, "deletado.");
+      toggleShowToast(nomeRobo);
+      closeModalHandle();
+      history.push("/");
+    } catch (error) {
+      console.error("Error deleting robo:", error);
+    }
   }
 
-  ////////////////////////////////////////////////////////////////////
-  //      Gerenciamento da abertura e fechamento dos Modais        //
+
+  //      Gerenciamento da abertura e fechamento dos Modais
   //////////////////////////////////////////////////////////////////
 
-  closeModalHandle = () => {
-    this.setState({ modalShow: !this.state.modalShow });
+  const closeModalHandle = () => setModalShow(false);
+
+  const showModalHandle = (id, nome) => {
+    setInputId(id);
+    setNomeRobo(nome);
+    console.log("Robô a ser deletado: id ", inputId);
+    setModalShow(true);
   };
 
-  openModalHandle = (id, nome) => {
-    this.setState({ modalShow: !this.state.modalShow });
-    this.setState(
-      {
-        inputId: id,
-        nomeRobo: nome,
-      },
-      () => {
-        console.log("Robô a ser deletado: id ", this.state.inputId);
-      }
-    );
-  };
 
-  ////////////////////////////////////////////////////////////////////
-  //      Toggle Robô ativo ou inativo                             //
+  //      Gerenciamento da abertura e fechamento dos Toasts
   //////////////////////////////////////////////////////////////////
 
-  handleToggle = (id) => {
-    this.setState((prevState) => {
-      const newArray = prevState.robos.map((robo) => {
+  const toggleShowToast = (nome) => {
+    setIsShowingTost(!isShowingToast);
+    setNomeRobo(nome);
+    console.log("Robô deletado: ", nomeRobo);
+  };
+
+
+  //      Chama a API para editar status ativo/inativo do robô
+  //////////////////////////////////////////////////////////////////
+
+  async function editarAtivo(robo) {
+    await RoboService.editarRobo(robo, robo.id).then((res) => {
+      console.log(
+        "Status do Robô id ", robo.id, " alterado."
+      );
+    });
+  }
+
+
+  //      Toggle Robô ativo ou inativo
+  //////////////////////////////////////////////////////////////////
+
+  const handleToggleRoboAtivo = (id) => {
+    setRobos((prevRobos) => {
+      const updateRobos = prevRobos.map((robo) => {
         if (robo.id === id) {
-          const roboClicado = {
+          const roboUpdated = {
             ...robo,
             ativo: robo.ativo === "1" ? "0" : "1",
           };
-          this.editarAtivo(roboClicado);
+          editarAtivo(roboUpdated);
           console.log(
-            "Alterar se está ativo ou inativo: " + JSON.stringify(roboClicado)
+            "Alterando se o robô está ativo ou inativo: " + JSON.stringify(roboUpdated)
           );
-          return roboClicado;
+          return roboUpdated;
         }
         return robo;
       });
-      return { robos: newArray };
+      return updateRobos;
     });
   };
 
-  ////////////////////////////////////////////////////////////////////
-  //      Editar status ativo/inativo do robô                      //
+
+  //      Interface do usuário
   //////////////////////////////////////////////////////////////////
 
-  editarAtivo = (robo) => {
-    RoboService.editarRobo(robo, this.state.id).then((res) => {
-      this.props.history.push("/robo");
-    });
-  };
-
-  ////////////////////////////////////////////////////////////////////
-  //      Interface do usuário                                     //
-  //////////////////////////////////////////////////////////////////
-
-  render() {
-    const roboList = this.state.robos.map((robo) => {
-      return (
-        <tr>
-          <td>
-            <label>
-              <div>
-                <ToggleSwitch
-                  checked={robo.ativo === "1" ? true : false}
-                  offColor="rgb(200,0,0)"
-                  onChange={() => this.handleToggle(robo.id)}
-                />
-                &nbsp;&nbsp;&nbsp;
-                <small>{robo.ativo === "1" ? "Ativo" : "Inativo"}</small>
-              </div>
-            </label>
-          </td>
-          <td>{robo.id}</td>
-          <td style={{ whiteSpace: "nowrap" }}>{robo.nome}</td>
-          <td>{robo.descricao}</td>
-          <td>{robo.dtExecutar}</td>
-          <td>
-            <ButtonGroup>
-              <Button
-                size="sm"
-                color="primary"
-                onClick={() => this.editarRobo(robo.id)}
-              >
-                Editar
-              </Button>
-              <Button
-                size="sm"
-                variant="danger"
-                onClick={() => this.openModalHandle(robo.id, robo.nome)}
-              >
-                Deletar
-              </Button>
-            </ButtonGroup>
-          </td>
-        </tr>
-      );
-    });
-
+  const roboList = robos.map((robo) => {
     return (
-      <div>
-        <Container fluid>
-        <p>&nbsp;</p>
-          <h3>Lista dos Robôs</h3>
-          <p>&nbsp;</p>
-          <button className="btn btn-primary" onClick={this.addRobo}>
-            Adicionar Robô
-          </button>
-          <Table className="mt-4">
-            <thead>
-              <tr>
-                <th width="15%">Ativo</th>
-                <th width="10%">Id</th>
-                <th width="20%">Nome</th>
-                <th width="20%">Descrição</th>
-                <th width="20%">Data Execução</th>
-                <th width="20%">Actions</th>
-              </tr>
-            </thead>
-            <tbody>{roboList}</tbody>
-          </Table>
-        </Container>
-        <ModalConfirmacao
-          showModal={this.state.modalShow}
-          handleClose={this.closeModalHandle}
-          modalData={this.state.inputId}
-          deleteRobo={this.deletarRobo}
-        />
-        <DialogToast
-          showToast={this.state.isShowingToast}
-          handleClose={this.closeToastHandle}
-          nomeRobo={this.state.nomeRobo}
-          tipoDialog={"success"}
-          toastTitle={"Info"}
-          toastText={`O robô "${this.state.nomeRobo}" foi deletado com êxito.`}
-        />
-      </div>
+      <tr key={robo.id}>
+        <td>
+          <label>
+            <div>
+              <ToggleSwitch
+                checked={robo.ativo === "1" ? true : false}
+                offColor="rgb(200,0,0)"
+                onChange={() => handleToggleRoboAtivo(robo.id)}
+              />
+              &nbsp;&nbsp;&nbsp;
+              <small>{robo.ativo === "1" ? "Ativo" : "Inativo"}</small>
+            </div>
+          </label>
+        </td>
+        <td>{robo.id}</td>
+        <td style={{ whiteSpace: "nowrap" }}>{robo.nome}</td>
+        <td>{robo.descricao}</td>
+        <td>{robo.dtExecutar}</td>
+        <td>
+          <ButtonGroup>
+            <Button size="sm" color="primary" onClick={() => roboEdit(robo.id)}>
+              Editar
+            </Button>
+            <Button
+              size="sm"
+              variant="danger"
+              onClick={() => showModalHandle(robo.id, robo.nome)}
+            >
+              Deletar
+            </Button>
+          </ButtonGroup>
+        </td>
+      </tr>
     );
-  }
+  });
+
+  return (
+    <div>
+      <Container fluid>
+        <p>&nbsp;</p>
+        <h3>Lista dos Robôs</h3>
+        <p>&nbsp;</p>
+        <button className="btn btn-primary" onClick={() => addRobo}>
+          Adicionar Robô
+        </button>
+        <Table className="mt-4">
+          <thead>
+            <tr>
+              <th width="15%">Ativo</th>
+              <th width="10%">Id</th>
+              <th width="20%">Nome</th>
+              <th width="20%">Descrição</th>
+              <th width="20%">Data Execução</th>
+              <th width="20%">Actions</th>
+            </tr>
+          </thead>
+          <tbody>{roboList}</tbody>
+        </Table>
+      </Container>
+
+      <ModalConfirmacao
+        showModal={modalShow}
+        handleClose={closeModalHandle}
+        modalData={inputId}
+        deleteRobo={() => deletarRobo(inputId)}
+      />
+
+      <DialogToast
+        showToast={isShowingToast}
+        handleClose={toggleShowToast}
+        nomeRobo={nomeRobo}
+        tipoDialog={"success"}
+        toastTitle={"Info"}
+        toastText={`O robô "${nomeRobo}" foi deletado com êxito.`}
+      />
+    </div>
+  );
 }
 
 export default RoboList;
