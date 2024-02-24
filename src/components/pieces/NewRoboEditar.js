@@ -1,4 +1,4 @@
-import React, { Component, useState } from "react";
+import React, { Component, useEffect, useState } from "react";
 import RoboService from "../services/RoboService";
 import { Container } from "react-bootstrap";
 import { ToggleSwitch } from "react-dragswitch";
@@ -8,8 +8,9 @@ import DialogToast from "./DialogToast";
 
 function NewRoboEditar() {
   const [robos, setRobos] = useState([]);
-  const [id, setId] = useState([""]);
+  const [roboId, setRoboId] = useState([""]);
   const [nome, setNome] = useState([""]);
+  const [idRoboEditando, setIdRoboEditando] = useState([""]);
   const [dtExecutar, setDtExecutar] = useState([""]);
   const [descricao, setDescricao] = useState([""]);
   const [ativo, setAtivo] = useState([""]);
@@ -17,13 +18,18 @@ function NewRoboEditar() {
   const [checked, setChecked] = useState([""]);
   const [isInputEnabled, setIsInputEnabled] = useState([false]);
   const [isShowingErrorToast, setIsShowingErrorToast] = useState([false]);
-  const [isShoisShowingInfoToast, setIsShowingInfoToast] = useState([false]);
+  const [isShowingInfoToast, setIsShowingInfoToast] = useState([false]);
   const [isShowingEmptyErrorToast, setIsShowingEmptyErrorToast] = useState([
     false,
   ]);
+  const MyComponent = ({ match }) => {
+    const { id } = match.params;
+    setRoboId(id);
+  };
+  const history = useHistory();
 
   useEffect(() => {
-    RoboService.getRoboById(id).then((response) => {
+    RoboService.getRoboById(roboId).then((response) => {
       let robo = response.data;
       setRobos({
         id: robo.id,
@@ -80,7 +86,7 @@ function NewRoboEditar() {
       openEmptyErrorToastHandle();
     } else {
       let editandoRobos = {
-        idRobo: id,
+        idRobo: roboId,
         nomeRobo: nome,
         dtExecutarRobo: dtExecutar,
         descricaoRobo: descricao,
@@ -91,23 +97,23 @@ function NewRoboEditar() {
           setRobos({ robos: response.data }, () => {
             // Verifica se já existe robô com este mesmo nome
             if (editandoRobos.nomeRobo === robos.nome) {
-              RoboService.getRoboById(id).then((response) =>
-                setId({ robosId: response.data }, () => {
+              RoboService.getRoboById(roboId).then((response) =>
+                setIdRoboEditando({ idRoboEditando: response.data }, () => {
                   // Se existe robô com o mesmo nome, verifica se estou
                   // tentando editar o mesmo robô que cliquei na tela anterior
-                  if (robosId.nome === nome) {
+                  if (idRoboEditando.nome === nome) {
                     console.log("Editando robo => " + JSON.stringify(robos));
-                    RoboService.editarRobo(robos, id).then((response) => {
-                      openInfoToastHandle(nome);
+                    RoboService.editarRobo(robos, roboId).then((response) => {
+                      onpenInfoToastHandle(nome);
                     });
                   } else {
-                    openErrorToastHandle(nome);
+                    onpenErrorToastHandle(nome);
                   }
                 })
               );
             } else {
               console.log("robo => " + JSON.stringify(robos));
-              RoboService.editarRobo(robos, id).then((response) => {
+              RoboService.editarRobo(robos, roboId).then((response) => {
                 this.openInfoToastHandle(nome);
               });
             }
@@ -122,13 +128,13 @@ function NewRoboEditar() {
   //      Desabilitar Input Id
   //////////////////////////////////////////////////////////////////
 
-  toggleInputEnable = () => setIsInputEnabled(!isInputEnabled);
+  const toggleInputEnable = () => setIsInputEnabled(!isInputEnabled);
 
   //      Edição dos Inputs do formulário
   //////////////////////////////////////////////////////////////////
 
   const alterarId = (event) => {
-    setId(event.target.value);
+    setRoboId(event.target.value);
   };
   const alterarNome = (event) => {
     setNome(event.target.value);
@@ -144,14 +150,11 @@ function NewRoboEditar() {
   //////////////////////////////////////////////////////////////////
 
   const toggleHandle = (e) => {
-    setChecked(e),
-      () => {
-        console.log("toggle state changed");
-      };
-    setAtivo(!checked ? "1" : "0"),
-      () => {
-        console.log("Clicked! Activated: ", this.state.ativo);
-      };
+    setChecked(e);
+    console.log("toggle state changed");
+
+    setAtivo(!checked ? "1" : "0");
+      console.log("Clicked! Activated: ", ativo);
   };
 
   ////////////////////////////////////////////////////////////////////
@@ -176,7 +179,7 @@ function NewRoboEditar() {
         <div className="row">
           <div className="card col-md-6 offset-md-3 ">
             <p>&nbsp;</p>
-            <h5 className="text-center">{this.state.nome}</h5>
+            <h5 className="text-center">{nome}</h5>
             <div className="card-body">
               <form>
                 <div className="form-group">
@@ -185,9 +188,9 @@ function NewRoboEditar() {
                     placeholder="Id"
                     name="id"
                     className="form-control"
-                    value={this.state.id}
-                    onChange={this.alterarId}
-                    disabled={!this.state.isInputEnabled}
+                    value={roboId}
+                    onChange={alterarId}
+                    disabled={!isInputEnabled}
                   />
                 </div>
                 <div className="form-group">
@@ -208,8 +211,8 @@ function NewRoboEditar() {
                     placeholder="Data da Execução"
                     name="data-da-Execucao"
                     className="form-control"
-                    value={this.state.dtExecutar}
-                    onChange={this.alterarData}
+                    value={dtExecutar}
+                    onChange={alterarData}
                   />
                 </div>
                 <div className="form-group">
@@ -219,8 +222,8 @@ function NewRoboEditar() {
                     placeholder="Descrição"
                     name="descricao"
                     className="form-control"
-                    value={this.state.descricao}
-                    onChange={this.alterarDescricao}
+                    value={descricao}
+                    onChange={alterarDescricao}
                   />
                 </div>
                 <div className="form-group">
@@ -230,17 +233,15 @@ function NewRoboEditar() {
                       <ToggleSwitch
                         checked={checked}
                         offColor="rgb(200,0,0)"
-                        onChange={(e) => {
-                          toggleHandle(e);
-                        }}
+                        onChange={(e) => toggleHandle(e.target.checked)}
                       />
                       &nbsp;
-                      {this.state.checked ? "Ativo" : "Inativo"}
+                      {checked ? "Ativo" : "Inativo"}
                     </div>
                   </label>
                   <p>&nbsp;</p>
                 </div>
-                <button className="btn btn-success" onClick={this.editarRobo}>
+                <button className="btn btn-success" onClick={editarRobo}>
                   Salvar
                 </button>
                 <button
@@ -259,18 +260,18 @@ function NewRoboEditar() {
           handleClose={this.closeErrorToastHandle}
           tipoDialog={"danger"}
           toastTitle={"Erro"}
-          toastText={`Já existe um robô com o nome de "${this.state.nome}". Por favor escolha outro.`}
+          toastText={`Já existe um robô com o nome de "${nome}". Por favor escolha outro.`}
         />
         <DialogToast
-          showToast={this.state.isShowingInfoToast}
-          handleClose={this.closeInfoToastHandle}
+          showToast={isShowingInfoToast}
+          handleClose={closeInfoToastHandle}
           tipoDialog={"success"}
           toastTitle={"Info"}
-          toastText={`As alterações no Robô "${this.state.nome}" foram salvas com êxito.`}
+          toastText={`As alterações no Robô "${nome}" foram salvas com êxito.`}
         />
         <DialogToast
-          showToast={this.state.isShowingEmptyErrorToast}
-          handleClose={this.closeEmptyErrorToastHandle}
+          showToast={isShowingEmptyErrorToast}
+          handleClose={closeEmptyErrorToastHandle}
           tipoDialog={"danger"}
           toastTitle={"Erro"}
           toastText={`Você deve definir um nome para o Robô.`}

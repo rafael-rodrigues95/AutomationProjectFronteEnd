@@ -2,6 +2,8 @@ import React, { Component, useEffect, useState } from "react";
 import { Button, ButtonGroup, Container, Table, Modal } from "react-bootstrap";
 import DialogToast from "./DialogToast";
 import RoboService from "../services/RoboService";
+import CardRobot from "./cards/RobotCard"
+import CardAtrasos from "./cards/AtrasosCard"
 import { ToggleSwitch } from "react-dragswitch";
 import { useHistory } from "react-router-dom";
 
@@ -164,7 +166,8 @@ function RoboList() {
             <div>
               <ToggleSwitch
                 checked={robo.ativo === "1" ? true : false}
-                offColor="rgb(200,0,0)"
+                offColor="#f22727"
+                onColor="#899d78"
                 onChange={() => handleToggleRoboAtivo(robo.id)}
               />
               &nbsp;&nbsp;&nbsp;
@@ -197,6 +200,9 @@ function RoboList() {
   return (
     <div>
       <Container fluid>
+        <p>&nbsp;</p>
+        <CardRobot/>
+        <CardAtrasos/>
         <p>&nbsp;</p>
         <h3>Lista dos Robôs</h3>
         <p>&nbsp;</p>

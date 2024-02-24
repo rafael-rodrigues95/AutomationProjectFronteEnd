@@ -3,13 +3,14 @@ import RoboList from "./pieces/RoboList";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import RoboCriar from "./pieces/RoboCriar";
 import RoboEditar from "./pieces/RoboEditar";
+import NewRoboEditar from "./pieces/NewRoboEditar";
 
 
 class Body extends Component {
   render() {
     return (
       <div>
-                <Router>
+        <Router>
           <div className="container">
             <Switch>
               <Route exact path="/" component={RoboList}></Route>
