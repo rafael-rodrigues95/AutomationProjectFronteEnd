@@ -3,9 +3,10 @@ import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Card from "react-bootstrap/Card";
+import { ImageAreaEmp } from "../../../resources/images/ImageAreaEmp";
 
 
-function RobotCards() {
+function AreaEmpCard() {
   return (
     <>
       <p>&nbsp;</p>
@@ -15,11 +16,10 @@ function RobotCards() {
             <Container>
               <Row>
                 <Col xs={4}>
-                  <Robot />
+                  <ImageAreaEmp/>
                 </Col>
                 <Col>
-                  <h3 style={{ color: "#f7b538" }}>1740</h3>
-                  SMSs enviados hoje
+                  Acesse a Área do Empregado<br/>
                 </Col>
               </Row>
             </Container>
@@ -30,4 +30,4 @@ function RobotCards() {
   );
 }
 
-export default RobotCards;
+export default AreaEmpCard;

@@ -4,6 +4,17 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Card from "react-bootstrap/Card";
 
+let counts = setInterval(updated);
+
+let upto = 1000;
+
+function updated() {
+  var count = document.getElementById("counter2");
+  count.innerHTML = ++upto;
+  if (upto === 1440) {
+      clearInterval(counts);
+  }
+}
 
 function AtrasosCard() {
   return (
@@ -18,7 +29,7 @@ function AtrasosCard() {
                   <ImageAtraso />
                 </Col>
                 <Col>
-                  <h3 style={{ color: "#F22727" }}>1740</h3>
+                  <h3 style={{ color: "#F22727" }} id="counter2"></h3>
                   Atrasos detectados
                 </Col>
               </Row>

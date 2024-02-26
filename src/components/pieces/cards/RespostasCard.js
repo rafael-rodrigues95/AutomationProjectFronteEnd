@@ -1,11 +1,22 @@
-import { Robot } from "../../../resources/images/ImageRobot";
+import { ImageRespostas } from "../../../resources/images/ImageRespostas";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Card from "react-bootstrap/Card";
 
+let counts = setInterval(updated);
 
-function RobotCards() {
+let upto = 1440;
+
+function updated() {
+  var count = document.getElementById("counter3");
+  count.innerHTML = ++upto;
+  if (upto === 1840) {
+      clearInterval(counts);
+  }
+}
+
+function RespostasCard() {
   return (
     <>
       <p>&nbsp;</p>
@@ -15,11 +26,11 @@ function RobotCards() {
             <Container>
               <Row>
                 <Col xs={4}>
-                  <Robot />
+                  <ImageRespostas/>
                 </Col>
                 <Col>
-                  <h3 style={{ color: "#f7b538" }}>1740</h3>
-                  SMSs enviados hoje
+                  <h3 style={{ color: "#f0bcd4" }} id="counter3"></h3>
+                  Empregados resp.
                 </Col>
               </Row>
             </Container>
@@ -30,4 +41,4 @@ function RobotCards() {
   );
 }
 
-export default RobotCards;
+export default RespostasCard;

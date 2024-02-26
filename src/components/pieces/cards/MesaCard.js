@@ -1,8 +1,9 @@
-import { Robot } from "../../../resources/images/ImageRobot";
+import { ImageMesa } from "../../../resources/images/ImageMesa";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Card from "react-bootstrap/Card";
+import { Button } from "react-bootstrap";
 
 
 function RobotCards() {
@@ -15,18 +16,18 @@ function RobotCards() {
             <Container>
               <Row>
                 <Col xs={4}>
-                  <Robot />
+                  <ImageMesa/>
                 </Col>
                 <Col>
-                  <h3 style={{ color: "#f7b538" }}>1740</h3>
-                  SMSs enviados hoje
+                Acesse a Mesa de Operaões<br/>
                 </Col>
               </Row>
             </Container>
           </Card.Text>
         </Card.Body>
       </Card>
-    </>
+      
+      </>
   );
 }
 

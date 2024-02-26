@@ -5,6 +5,18 @@ import Col from "react-bootstrap/Col";
 import Card from "react-bootstrap/Card";
 
 
+let counts = setInterval(updated);
+
+let upto = 2100;
+
+function updated() {
+  var count = document.getElementById("counter");
+  count.innerHTML = ++upto;
+  if (upto === 2503) {
+      clearInterval(counts);
+  }
+}
+
 function RobotCards() {
   return (
     <>
@@ -18,7 +30,7 @@ function RobotCards() {
                   <Robot />
                 </Col>
                 <Col>
-                  <h3 style={{ color: "#f7b538" }}>1740</h3>
+                  <h3 style={{ color: "#f7b538" }} id="counter"></h3>
                   SMSs enviados hoje
                 </Col>
               </Row>

@@ -1,11 +1,22 @@
-import { Robot } from "../../../resources/images/ImageRobot";
+import { ImageNotificacoes } from "../../../resources/images/ImageNotificacoes";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Card from "react-bootstrap/Card";
 
+let counts = setInterval(updated);
 
-function RobotCards() {
+let upto = 1400;
+
+function updated() {
+  var count = document.getElementById("counter4");
+  count.innerHTML = ++upto;
+  if (upto === 1740) {
+      clearInterval(counts);
+  }
+}
+
+function NotificacoesCard() {
   return (
     <>
       <p>&nbsp;</p>
@@ -15,11 +26,11 @@ function RobotCards() {
             <Container>
               <Row>
                 <Col xs={4}>
-                  <Robot />
+                  <ImageNotificacoes/>
                 </Col>
                 <Col>
-                  <h3 style={{ color: "#f7b538" }}>1740</h3>
-                  SMSs enviados hoje
+                  <h3 style={{ color: "#899d78" }} id="counter4"></h3>
+                  Pessoas notificadas
                 </Col>
               </Row>
             </Container>
@@ -30,4 +41,4 @@ function RobotCards() {
   );
 }
 
-export default RobotCards;
+export default NotificacoesCard;

@@ -1,11 +1,15 @@
 import React, { Component, useEffect, useState } from "react";
-import { Button, ButtonGroup, Container, Table, Modal } from "react-bootstrap";
+import { Button, ButtonGroup, Container, Table, Modal, Row, Col } from "react-bootstrap";
 import DialogToast from "./DialogToast";
 import RoboService from "../services/RoboService";
-import CardRobot from "./cards/RobotCard"
-import CardAtrasos from "./cards/AtrasosCard"
+import RobotCard from "./cards/RobotCard"
+import AtrasosCard from "./cards/AtrasosCard"
 import { ToggleSwitch } from "react-dragswitch";
 import { useHistory } from "react-router-dom";
+import NotificacoesCard from "./cards/NotificacoesCard";
+import AreaEmpCard from "./cards/AreaEmpCard";
+import RespostasCard from "./cards/RespostasCard";
+import MesaCard from "./cards/MesaCard";
 
 
 //      Modal component
@@ -201,8 +205,30 @@ function RoboList() {
     <div>
       <Container fluid>
         <p>&nbsp;</p>
-        <CardRobot/>
-        <CardAtrasos/>
+        <Container>
+        <Row>
+          <Col>
+          <RobotCard/>
+          </Col>
+          <Col>
+          <NotificacoesCard/>
+          </Col>
+          <Col>
+          <AreaEmpCard/>
+          </Col>
+        </Row>
+        <Row>
+          <Col>
+          <AtrasosCard/>
+          </Col>
+          <Col>
+          <RespostasCard/>
+          </Col>
+          <Col>
+          <MesaCard/>
+          </Col>
+        </Row>
+        </Container>
         <p>&nbsp;</p>
         <h3>Lista dos Robôs</h3>
         <p>&nbsp;</p>

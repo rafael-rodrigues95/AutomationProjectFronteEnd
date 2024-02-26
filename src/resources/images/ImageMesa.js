@@ -1,22 +1,23 @@
-export const ImageAtraso = ({ color }) => {
+export const ImageMesa = ({ color }) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      class="icon icon-tabler icon-tabler-clock-exclamation"
+      class="icon icon-tabler icon-tabler-desk"
       width="65"
       height="65"
       viewBox="0 0 24 24"
       stroke-width="2"
-      stroke="#F22727"
+      stroke="#f7b538"
       fill="none"
       stroke-linecap="round"
       stroke-linejoin="round"
     >
       <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-      <path d="M20.986 12.502a9 9 0 1 0 -5.973 7.98" />
-      <path d="M12 7v5l3 3" />
-      <path d="M19 16v3" />
-      <path d="M19 22v.01" />
+      <path d="M3 6h18" />
+      <path d="M4 6v13" />
+      <path d="M20 19v-13" />
+      <path d="M4 10h16" />
+      <path d="M15 6v8a2 2 0 0 0 2 2h3" />
     </svg>
   );
 };
