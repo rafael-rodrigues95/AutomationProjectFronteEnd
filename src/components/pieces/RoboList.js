@@ -12,6 +12,7 @@ import RespostasCard from "./cards/RespostasCard";
 import MesaCard from "./cards/MesaCard";
 
 
+
 //      Modal component
 //////////////////////////////////////////////////////////////////
 
@@ -229,6 +230,7 @@ function RoboList() {
           </Col>
         </Row>
         </Container>
+ 
         <p>&nbsp;</p>
         <h3>Lista dos Robôs</h3>
         <p>&nbsp;</p>
